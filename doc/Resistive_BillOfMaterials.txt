@@ -1,0 +1,13 @@
+C1	0.1 uF	
+R1	39k	
+R2	1k	
+R3	1k	
+SparkFun Musical Instrument Shield DEV-10587
+SparkFun Arduino Stackable Header Kit PRT-10007
+Arduino USB (any type) e.g. Uno R3 SparkFun DEV-11021
+Hookup wire solid core 22-24 AWG several inches (colors optional)
+
+Optional: 
+Hookup wire stranded 22-24 AWG a few feet
+Touch pads, such as some scraps of copper or brass sheet material, copper pipe, or whatever you have.
+DC power supply 9-12VDC 500mA min. F2 5.5 x 2.1 center positive connector e.g. SparkFun TOL-00298
