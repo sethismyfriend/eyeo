@@ -24,6 +24,7 @@
   Breakout: https://learn.sparkfun.com/tutorials/mpr121-hookup-guide/capacitive-touch-sensor-breakout-board
   
  */
+ 
 #include "mpr121.h"
 #include <Wire.h>
 #include <SPI.h>
@@ -71,16 +72,16 @@ int irqpin = 2;  // Digital 2
 boolean touchStates[12]; //to keep track of the previous touch states
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "seth"; //  your network SSID (name) 
-char pass[] = "internet";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "amplifyUS"; //  your network SSID (name) 
+char pass[] = "intel123";    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
-
+  
 //******UNIQUE TO EACH GALILEO
 int32_t galileoID = 0;         //set unique for 0-3 for each touchpoint
-IPAddress remoteAddress(192,168,0,101);  //address of remote PC
-char pingStr[] = "ping -c 1 192.168.0.101"; // ping once
-int releaseMode = 0;  // 0 is debug // 1 is release (determines which network to join)
-boolean useSerial = true; 
+IPAddress remoteAddress(192,168,1,100);  //address of remote PC
+char pingStr[] = "ping -c 1 192.168.1.100"; // ping once
+int releaseMode = 1;  // 0 is debug // 1 is release (determines which network to join)
+boolean useSerial = false; 
 
 //***********SAME for each Galileo
 unsigned int localPort = 12001;      // local port to listen on
@@ -241,6 +242,9 @@ void debugLED(int pin, int state) {
  } else if (pin == 3) {
      if(state == 1) setRGB(0,255,255); 
      else  setRGB(0,0,0); 
+ } else if (pin == 4) {
+     if(state == 1) setConnectionPanel(255,0,0); 
+     else  setConnectionPanel(0,0,0);  
  }
 }
 
@@ -251,8 +255,8 @@ void readBetweenColumns() {
   sensorAvg = (sensorAvg * numToAvg + sensorBuffer)/(numToAvg + 1); //caclulates a running average to filter noise
   //check if the sensorAvg has shifted above Hysterisis since the average was caluculated 8 samples ago. 
   if(abs(aFewSamplesAgo-sensorAvg) >= SENSOR_HYSTERESIS) {
-     Serial.print("SENDING_CHANGE: "); 
-     Serial.println(sensorBuffer);
+     if(useSerial) Serial.print("SENDING_CHANGE: "); 
+     if(useSerial) Serial.println(sensorBuffer);
      int holdOrRelease = -1; 
      if(aFewSamplesAgo > sensorAvg) holdOrRelease = 1; 
      else holdOrRelease = 0; 
@@ -291,7 +295,7 @@ void sendResistiveChange(int column, int holdRelease, int amount) {
 
 void sendTouchEvent(int pin, int state) {
     
-    debugLED(pin,state);   
+    //debugLED(pin,state);   
   
     OSCMessage msg("/touch");
     msg.add((int32_t)galileoID); 
@@ -306,7 +310,7 @@ void sendTouchEvent(int pin, int state) {
 //------------ WIFI FUNCTIONS -----------------
 void setupWifi() {
   // check for the presence of the shield:
-  Serial.println("starting connection to WIFI"); 
+  if(useSerial) Serial.println("starting connection to WIFI"); 
   
   if (WiFi.status() == WL_NO_SHIELD) {
     if(useSerial) Serial.println("WiFi shield not present"); 

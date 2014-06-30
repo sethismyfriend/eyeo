@@ -76,7 +76,7 @@ public void controlEvent(ControlEvent c) {
     int b = int(c.getArrayValue(2));
     int a = int(c.getArrayValue(3));
     color col = color(r,g,b,a);
-    String colStr = r + "|" + g + "|" + b; 
+    String colStr = "p" + "|" + r + "|" + g + "|" + b; 
     println(colStr);
     OscMessage myMessage = new OscMessage(colStr);
     oscP5.send(myMessage, myRemoteLocation);     
